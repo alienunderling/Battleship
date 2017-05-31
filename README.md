@@ -1,12 +1,6 @@
 # Battleship
 Simple .net implementation of the classic board game.
 
-Battleship
-
-Purpose
-
-Create a simplified implementation of the classic game battleship that best illustrates your .NET skills.
-
 Requirements:
 
 1. Two players
