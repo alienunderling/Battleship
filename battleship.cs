@@ -88,7 +88,7 @@ namespace BattleShipApplication
     {
         //member variables
         internal string name;
-        //BattleShipBoard gameBoard;
+        BattleShipBoard gameBoard;
         string shipLocation;
         Ship ship;
         
@@ -111,7 +111,7 @@ namespace BattleShipApplication
             shipLocation = Convert.ToString(Console.ReadLine());
             Console.WriteLine("player one entered these coordinates: {0}", shipLocation);
 
-            coordinates = parseLocation();
+            coordinates = parseLocation(shipLocation);
 
             if(checkCoord( coordinates ))
             {
