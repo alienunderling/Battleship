@@ -32,11 +32,14 @@ namespace BattleShipApplication
         internal Player player1;
         internal Player player2;
         
-        public void playRound()
+        public BattleShipGame()
         {
             player1 = new Player();
             player2 = new Player();
-            
+        }
+        
+        public void playRound()
+        {
             player1.setName("player1");
             player2.setName("player2");
             
@@ -55,7 +58,17 @@ namespace BattleShipApplication
             row = x;
             column = y;
         }
-    }
+        
+        public int getRow()
+        {
+            return row;
+        }
+        
+        public int getColumn()
+        {
+            return column;
+        }
+    }//end class Coordinates
     
     class BattleShipBoard  
     {
@@ -74,15 +87,13 @@ namespace BattleShipApplication
             }
         }
         
-        public void placeShip( string[] coords )
-        {
-            string coord1 = coords[0];
-            string coord2 = coords[1];
-            
+        public void placeShip( Coordinates start, Coordinates end )
+        { 
             //Set the Units corresponding to the coord range to occupied.
-            
+            Console.WriteLine( "Line 96 start Coordinates {0}, {1}", start.getRow(), start.getColumn() );
+            Console.WriteLine( "Line 97" );
         }
-    }
+    }//end class BattleShipBoard
     
     class Player
     {
@@ -91,6 +102,14 @@ namespace BattleShipApplication
         BattleShipBoard gameBoard;
         string shipLocation;
         Ship ship;
+        Coordinates startRange;
+        Coordinates endRange;
+        
+        public Player()
+        {
+            gameBoard = new BattleShipBoard();
+            ship = new Ship();
+        }
         
         public void setName(string playerName)
         {
@@ -109,7 +128,8 @@ namespace BattleShipApplication
             Console.WriteLine("Please enter the ship location {0}. Format: A3 A5", name);
 
             shipLocation = Convert.ToString(Console.ReadLine());
-            Console.WriteLine("{0} entered these coordinates: {1}", name, shipLocation);
+            
+            //Console.WriteLine("{0} entered these coordinates: {1}", name, shipLocation);
 
             coordinates = parseLocation(shipLocation);
 
@@ -118,19 +138,17 @@ namespace BattleShipApplication
                 Console.WriteLine("Sorry Player {0} please re-enter. Something was not right with your coordinates. Format: A3 A6", name);
 
                 shipLocation = Convert.ToString(Console.ReadLine());
-                Console.WriteLine("player {0} entered these coordinates: {1}", name, shipLocation);
 
                 coordinates = parseLocation(shipLocation);
-            } 
-            Console.WriteLine( "Line 125" );
-            gameBoard.placeShip( coordinates );
+            }
+            
+            gameBoard.placeShip( startRange, endRange );
         }
         
         //TEST THIS
         public bool checkCoord( string[] coords ) //eg 'A3, B7'
         {
             bool goodCoords = true;
-            
             //'p' is a placeholder to move to base 1
             char[] coordArray = { 'p', 'A', 'B', 'C', 'D' };
 
@@ -138,7 +156,8 @@ namespace BattleShipApplication
             string c2 = coords[1];//B7
 
             //Check if the user entered a correct format
-            if( (c1 == null) || (c2 == null) ){            
+            if( (c1 == null) || (c2 == null) )
+            {            
                 return false;
             } 
 
@@ -147,25 +166,22 @@ namespace BattleShipApplication
             char av2 = c2[0];
 
             //Get the Numeric character from each coord
-            char num1 = c1[1];
-            char num2 = c2[1];
-
+            char cnum1 = c1[1];
+            char cnum2 = c2[1];
+            //We need these to be int's.
+            int num1 = (int)Char.GetNumericValue(cnum1);
+            int num2 = (int)Char.GetNumericValue(cnum2);
+            
             int pos1 = Array.IndexOf(coordArray, av1);
             int pos2 = Array.IndexOf(coordArray, av2);
 
-            Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 ); 
-            Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
-
-            if((pos1 == pos2 && num1 == num2) || (pos1 != pos2 && num1 != num2) ){
+            if((pos1 == pos2 && num1 == num2) || (pos1 != pos2 && num1 != num2) )
+            {
                 Console.WriteLine( "First Fail: coord NOT ok" );
                 goodCoords = false;
             }
 
             if(pos1 == pos2){
-                Console.WriteLine( "pos1 == pos2" );
-                Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 );
-                Console.WriteLine( "num2 - num1 = {0}", num2 - num1 );
-
                 if( num1 > num2 && (num1 - num2) == 3 )
                 {
                     Console.WriteLine( "coord ok" );
@@ -178,10 +194,6 @@ namespace BattleShipApplication
                 }
             } else
             {
-                Console.WriteLine( "pos1 != pos2" );
-                Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
-                Console.WriteLine( "pos2 - pos1 = {0}", pos2 - pos1 );
-
                 if( pos1 > pos2 && (pos1 - pos2) == 3 )
                 {
                     Console.WriteLine( "coord ok" );
@@ -193,8 +205,12 @@ namespace BattleShipApplication
                     goodCoords = false;
                 }
             }
-
-            Console.WriteLine( "Coordinates passed? {0}", goodCoords );
+            
+            if(goodCoords) 
+            {
+                startRange = new Coordinates(pos1, num1);
+                endRange = new Coordinates(pos2, num2);
+            }
             
             return goodCoords;
         }
@@ -219,15 +235,13 @@ namespace BattleShipApplication
                 
                 coordinates[0] = coord1;
                 coordinates[1] = coord2;
-                
-                Console.WriteLine("First Coordinate: "+coordinates[0].ToString()+ws.ToString()+"Second Coordinate: "+coordinates[1].ToString()+"\n");
-            } else {
+            } else 
+            {
                 Console.WriteLine("Enter coordinates between [A-H], [1-8])");
-                
             }
             
             return coordinates;
-        } 
+        }
     }//end class Player
     
     class Ship  
@@ -244,7 +258,7 @@ namespace BattleShipApplication
         {
             ++hits;    
         }
-    }
+    }//end class ship
     
     class Unit  
     {
@@ -259,7 +273,6 @@ namespace BattleShipApplication
         public bool getIsOccupied()
         {
             return isOccupied;
-        }
-        
-    }
+        } 
+    }//end class Unit
 }
