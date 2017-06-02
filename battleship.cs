@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
 namespace BattleShipApplication
 {
     class BattleShip
@@ -54,28 +57,40 @@ namespace BattleShipApplication
         }
     }
     
+    class BattleShipBoard  
+    {
+        List<Unit> gameBoard{get;set;}
+        
+        public BattleShipBoard()
+        {
+            gameBoard = new List<Unit>();
+            
+            for (int i = 1; i <= 10; i++)
+            {
+                for (int j = 1; j <= 10; j++)
+                {
+                    gameBoard.Add(new Unit(i, j));
+                }
+            }
+        }
+    }
+    
     class Player
     {
         //member variables
         internal string name;
-        //TODO: Create class Board
-        //Board gameBoard;
-        bool hasLost = false;
+        //BattleShipBoard gameBoard;
         string shipLocation;
+        Ship ship;
         
         public void setName(string playerName)
         {
             name = playerName;
         }
         
-        public void setHasLost()
-        {
-            hasLost = true;
-        }
-        
         public bool getHasLost()
         {
-            return hasLost;
+            return ship.hasSunk();
         }
         
         public void setShipLocation()
@@ -84,12 +99,42 @@ namespace BattleShipApplication
             
             shipLocation = Convert.ToString(Console.ReadLine());
             Console.WriteLine("player one entered these coordinates: {0}", shipLocation);
+            
+            //gameBoard.placeShips( parseLocation() );
         }
         
         public string getShipLocation()
         {
             return shipLocation;
         }
+        
+        public string[] parseLocation( string location )
+        {
+            string re1="((?:[a-h][a-h]*[1-8]+[a-h1-8]*))";	// Coordinate
+            string re2="(\\s+)";	// white space in between
+
+            Regex r = new Regex(re1+re2+re1,RegexOptions.IgnoreCase|RegexOptions.Singleline);
+            Match m = r.Match(location);
+            
+            string[] coordinates = new string[2];
+
+            if (m.Success)
+            {
+                String coord1 = m.Groups[1].ToString();
+                String ws = m.Groups[2].ToString();
+                String coord2 = m.Groups[3].ToString();
+                
+                coordinates[0] = coord1;
+                coordinates[1] = coord2;
+                
+                Console.WriteLine("First Coordinate: "+coordinates[0].ToString()+ws.ToString()+"Second Coordinate: "+coordinates[1].ToString()+"\n");
+            } else {
+                Console.WriteLine("Enter coordinates between [A-H], [1-8])");
+                
+            }
+            
+            return coordinates;
+        } 
     }//end class Player
     
     class Ship  
@@ -97,19 +142,32 @@ namespace BattleShipApplication
         int width = 3;
         int hits;
         
-        public bool isSunk()
+        public bool hasSunk()
         {
             return hits >= width;
         }
         
-        public void setHits()
+        public void isHit()
         {
             ++hits;    
         }
+    }
+    
+    class Unit  
+    {
+        Coordinates coordinates {get; set;}
+        bool isOccupied = false;
         
-        public int getHits()
+        public Unit(int row, int column)
         {
-            return hits;    
+            coordinates = new Coordinates(row, column);
+            isOccupied = true;
         }
+        
+        public bool getIsOccupied()
+        {
+            return isOccupied;
+        }
+        
     }
 }
