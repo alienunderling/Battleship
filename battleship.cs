@@ -65,13 +65,22 @@ namespace BattleShipApplication
         {
             gameBoard = new List<Unit>();
             
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 8; i++)
             {
-                for (int j = 1; j <= 10; j++)
+                for (int j = 1; j <= 8; j++)
                 {
                     gameBoard.Add(new Unit(i, j));
                 }
             }
+        }
+        
+        public void placeShip( string[] coords )
+        {
+            string coord1 = coords[0];
+            string coord2 = coords[1];
+            
+            //Set the Units corresponding to the coord range to occupied.
+            
         }
     }
     
@@ -93,23 +102,95 @@ namespace BattleShipApplication
             return ship.hasSunk();
         }
         
-        public void setShipLocation()
+        public bool setShipLocation()
         {
+            string[] coordinates = new string[2];
+
             Console.WriteLine("Please enter the ship location {0}. Format: A3 A5", name);
-            
+
             shipLocation = Convert.ToString(Console.ReadLine());
             Console.WriteLine("player one entered these coordinates: {0}", shipLocation);
+
+            coordinates = parseLocation();
+
+            if(checkCoord( coordinates ))
+            {
+                gameBoard.placeShip( coordinates );
+                return true;
+            }
             
-            //gameBoard.placeShips( parseLocation() );
+            return false;
         }
         
-        public string getShipLocation()
+        //TEST THIS
+        public bool checkCoord( string[] coords ) //eg 'A3, B7'
         {
-            return shipLocation;
+            bool goodCoords = false;
+            
+            //'p' is a placeholder to move to base 1
+        char[] coordArray = { 'p', 'A', 'B', 'C', 'D' };
+        
+        string c1 = coords[0];//A3
+        string c2 = coords[1];//B7
+        
+        //Get the Alpha character from each coord
+        char av1 = c1[0];
+        char av2 = c2[0];
+        
+        //Get the Numeric character from each coord
+        char num1 = c1[1];
+        char num2 = c2[1];
+        
+        int pos1 = Array.IndexOf(coordArray, av1);
+        int pos2 = Array.IndexOf(coordArray, av2);
+        
+        Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 ); 
+        Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
+        
+        if((pos1 == pos2 && num1 == num2) || (pos1 != pos2 && num1 != num2) ){
+            Console.WriteLine( "First Fail: coord NOT ok" );
         }
         
+        if(pos1 == pos2){
+            Console.WriteLine( "pos1 == pos2" );
+            Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 );
+            Console.WriteLine( "num2 - num1 = {0}", num2 - num1 );
+            
+            if( num1 > num2 && (num1 - num2) == 3 )
+            {
+                Console.WriteLine( "coord ok" );
+            } else if(num1 < num2 && (num2 - num1) == 3)
+            {
+                Console.WriteLine( "coord ok" );
+            } else {
+                Console.WriteLine( "Second Fail: coord NOT ok" );
+            }
+        } else
+        {
+            Console.WriteLine( "pos1 != pos2" );
+            Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
+            Console.WriteLine( "pos2 - pos1 = {0}", pos2 - pos1 );
+            
+            if( pos1 > pos2 && (pos1 - pos2) == 3 )
+            {
+                Console.WriteLine( "coord ok" );
+            } else if(pos1 < pos2 && (pos2 - pos1) == 3)
+            {
+                Console.WriteLine( "coord ok" );
+            } else {
+                Console.WriteLine( "Third Fail: coord NOT ok" );
+            }
+        }
+
+        Console.WriteLine( pos1 );
+            
+            return goodCoords;
+        }
+        
+        //TEST THIS
         public string[] parseLocation( string location )
         {
+            //This reg exp ensures the ship location is on the board.
             string re1="((?:[a-h][a-h]*[1-8]+[a-h1-8]*))";	// Coordinate
             string re2="(\\s+)";	// white space in between
 
@@ -161,7 +242,6 @@ namespace BattleShipApplication
         public Unit(int row, int column)
         {
             coordinates = new Coordinates(row, column);
-            isOccupied = true;
         }
         
         public bool getIsOccupied()
