@@ -102,87 +102,99 @@ namespace BattleShipApplication
             return ship.hasSunk();
         }
         
-        public bool setShipLocation()
+        public void setShipLocation()
         {
             string[] coordinates = new string[2];
 
             Console.WriteLine("Please enter the ship location {0}. Format: A3 A5", name);
 
             shipLocation = Convert.ToString(Console.ReadLine());
-            Console.WriteLine("player one entered these coordinates: {0}", shipLocation);
+            Console.WriteLine("{0} entered these coordinates: {1}", name, shipLocation);
 
             coordinates = parseLocation(shipLocation);
 
-            if(checkCoord( coordinates ))
+            while(!checkCoord( coordinates ))
             {
-                gameBoard.placeShip( coordinates );
-                return true;
-            }
-            
-            return false;
+                Console.WriteLine("Sorry Player {0} please re-enter. Something was not right with your coordinates. Format: A3 A6", name);
+
+                shipLocation = Convert.ToString(Console.ReadLine());
+                Console.WriteLine("player {0} entered these coordinates: {1}", name, shipLocation);
+
+                coordinates = parseLocation(shipLocation);
+            } 
+            Console.WriteLine( "Line 125" );
+            gameBoard.placeShip( coordinates );
         }
         
         //TEST THIS
         public bool checkCoord( string[] coords ) //eg 'A3, B7'
         {
-            bool goodCoords = false;
+            bool goodCoords = true;
             
             //'p' is a placeholder to move to base 1
-        char[] coordArray = { 'p', 'A', 'B', 'C', 'D' };
-        
-        string c1 = coords[0];//A3
-        string c2 = coords[1];//B7
-        
-        //Get the Alpha character from each coord
-        char av1 = c1[0];
-        char av2 = c2[0];
-        
-        //Get the Numeric character from each coord
-        char num1 = c1[1];
-        char num2 = c2[1];
-        
-        int pos1 = Array.IndexOf(coordArray, av1);
-        int pos2 = Array.IndexOf(coordArray, av2);
-        
-        Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 ); 
-        Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
-        
-        if((pos1 == pos2 && num1 == num2) || (pos1 != pos2 && num1 != num2) ){
-            Console.WriteLine( "First Fail: coord NOT ok" );
-        }
-        
-        if(pos1 == pos2){
-            Console.WriteLine( "pos1 == pos2" );
-            Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 );
-            Console.WriteLine( "num2 - num1 = {0}", num2 - num1 );
-            
-            if( num1 > num2 && (num1 - num2) == 3 )
-            {
-                Console.WriteLine( "coord ok" );
-            } else if(num1 < num2 && (num2 - num1) == 3)
-            {
-                Console.WriteLine( "coord ok" );
-            } else {
-                Console.WriteLine( "Second Fail: coord NOT ok" );
-            }
-        } else
-        {
-            Console.WriteLine( "pos1 != pos2" );
-            Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
-            Console.WriteLine( "pos2 - pos1 = {0}", pos2 - pos1 );
-            
-            if( pos1 > pos2 && (pos1 - pos2) == 3 )
-            {
-                Console.WriteLine( "coord ok" );
-            } else if(pos1 < pos2 && (pos2 - pos1) == 3)
-            {
-                Console.WriteLine( "coord ok" );
-            } else {
-                Console.WriteLine( "Third Fail: coord NOT ok" );
-            }
-        }
+            char[] coordArray = { 'p', 'A', 'B', 'C', 'D' };
 
-        Console.WriteLine( pos1 );
+            string c1 = coords[0];//A3
+            string c2 = coords[1];//B7
+
+            //Check if the user entered a correct format
+            if( (c1 == null) || (c2 == null) ){            
+                return false;
+            } 
+
+            //Get the Alpha character from each coord
+            char av1 = c1[0];
+            char av2 = c2[0];
+
+            //Get the Numeric character from each coord
+            char num1 = c1[1];
+            char num2 = c2[1];
+
+            int pos1 = Array.IndexOf(coordArray, av1);
+            int pos2 = Array.IndexOf(coordArray, av2);
+
+            Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 ); 
+            Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
+
+            if((pos1 == pos2 && num1 == num2) || (pos1 != pos2 && num1 != num2) ){
+                Console.WriteLine( "First Fail: coord NOT ok" );
+                goodCoords = false;
+            }
+
+            if(pos1 == pos2){
+                Console.WriteLine( "pos1 == pos2" );
+                Console.WriteLine( "num1 is {0} num2 is {1}", num1, num2 );
+                Console.WriteLine( "num2 - num1 = {0}", num2 - num1 );
+
+                if( num1 > num2 && (num1 - num2) == 3 )
+                {
+                    Console.WriteLine( "coord ok" );
+                } else if(num1 < num2 && (num2 - num1) == 3)
+                {
+                    Console.WriteLine( "coord ok" );
+                } else {
+                    Console.WriteLine( "Second Fail: coord NOT ok" );
+                    goodCoords = false;
+                }
+            } else
+            {
+                Console.WriteLine( "pos1 != pos2" );
+                Console.WriteLine( "pos1 is {0} pos2 is {1}", pos1, pos2 );
+                Console.WriteLine( "pos2 - pos1 = {0}", pos2 - pos1 );
+
+                if( pos1 > pos2 && (pos1 - pos2) == 3 )
+                {
+                    Console.WriteLine( "coord ok" );
+                } else if(pos1 < pos2 && (pos2 - pos1) == 3)
+                {
+                    Console.WriteLine( "coord ok" );
+                } else {
+                    Console.WriteLine( "Third Fail: coord NOT ok" );
+                    goodCoords = false;
+                }
+            }
+
+            Console.WriteLine( "Coordinates passed? {0}", goodCoords );
             
             return goodCoords;
         }
