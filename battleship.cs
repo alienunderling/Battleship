@@ -242,23 +242,34 @@ namespace BattleShipApplication
             return coordinates;
         }
         
+        //TODO: Refactor - There must be a better way to get the units out of the gameBoard
         public void outputBoards()  
         {
-            Console.WriteLine("{0} board", name);
             var currentUnitList = new List<Unit>();
             Unit tempUnit;
             
-            //TODO: Refactor - There must be a better way to get the units out of the gameBoard
+            Console.WriteLine("{0} board", name);
+            Console.WriteLine(Environment.NewLine);
+            
+            //First print the Column titles...
+            string[] clmns = { "   ", " A ", " B ", " C ", " D ", " E ", " F ", " G ", " H "};
+            
+            for(int i = 0; i <= 8; i++)
+            {
+                Console.Write(clmns[i]);
+            }
+            
+            Console.WriteLine(Environment.NewLine);
+            
             for(int row = 1; row <= 8; row++)
             {
+                Console.Write(" {0} ", row);
                 for(int ownColumn = 1; ownColumn <= 8; ownColumn++)
                 {
                     currentUnitList =  gameBoard.gameBoard.Where(x => x.coordinates.getRow() == row && x.coordinates.getColumn() == ownColumn).ToList();
                     tempUnit = currentUnitList[0];
                     Console.Write(" {0} ", tempUnit.getStatus());
                 }
-                
-                Console.Write("                ");
                 
                 Console.WriteLine(Environment.NewLine);
             }
