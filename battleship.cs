@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System;
 using System.Text.RegularExpressions;
 using System.Linq;
 
@@ -14,7 +14,7 @@ namespace BattleShipApplication
             Console.WriteLine("Ready to go, Players?  Lets place our ships! Press any key to continue.");
             Console.ReadKey();
             Console.WriteLine("Game Starting...");
-            game.playRound();
+            game.startGame();
         }
     
         //Used simply to test the testing.  
@@ -39,7 +39,7 @@ namespace BattleShipApplication
             player2 = new Player();
         }
         
-        public void playRound()
+        public void startGame()
         {
             player1.setName("player1");
             player2.setName("player2");
@@ -49,6 +49,43 @@ namespace BattleShipApplication
             
             player1.outputBoards();
             player2.outputBoards();
+            
+            playGame();
+        }
+        
+        public void playGame()  
+        {
+            while (!player1.hasLost() && !player2.hasLost())
+            {
+                playRound();
+            }
+            
+            player1.outputBoards();
+            player2.outputBoards();
+            
+            if (player1.hasLost())
+            {
+                Console.WriteLine(player2.name + " has won the game!");
+            }
+            else if (player2.hasLost())
+            {
+                Console.WriteLine(player1.name + " has won the game!");
+            }
+        }
+        
+        public void playRound()  
+        {
+            //Player1 Fires First
+            Console.WriteLine(player1.name + ": Provide a location to hit {0}'s ship", player2.name);
+            var p1Shot = Console.ReadLine();
+            
+            player2.processShot(p1Shot);
+            
+            //Player2 Fires Second
+            Console.WriteLine(player2.name + ": Provide a location to hit {0}'s ship", player1.name);
+            var p2Shot = Console.ReadLine();
+            
+            player1.processShot(p2Shot);
         }
     }//end class BattleShipGame
     
@@ -72,8 +109,6 @@ namespace BattleShipApplication
         public void placeShip( Coordinates start, Coordinates end )
         { 
             //Set the Units corresponding to the coord range to occupied.
-            Console.WriteLine( "Line 94 start Coordinates {0}, {1}", start.getRow(), start.getColumn() );
-            
             //Find the corresponding units and set them to isOccupied
                               
             var occupiedUnits = new List<Unit>();
@@ -82,14 +117,12 @@ namespace BattleShipApplication
                                             && x.coordinates.getColumn() >= start.getColumn() 
                                             && x.coordinates.getRow() <= end.getRow() 
                                             && x.coordinates.getColumn() <= end.getColumn()).ToList();
-                                            
-            Console.WriteLine( "Line 106 occupiedUnits:" );
+            
             int i = 0;
             foreach (Unit unit in occupiedUnits)
             {
-                Console.WriteLine("Current Unit is occupied? {0} ", unit.getIsOccupied());
                 unit.setIsOccupied();
-                Console.WriteLine("Unit {0} row value is {1}, c value is {2} and is now occupied? {3} ", ++i, unit.coordinates.getRow(), unit.coordinates.getColumn(), unit.getIsOccupied());
+                unit.coordinates.getColumn(), unit.getIsOccupied());
             } 
         }
     }//end class BattleShipBoard
@@ -115,7 +148,7 @@ namespace BattleShipApplication
             name = playerName;
         }
         
-        public bool getHasLost()
+        public bool hasLost()
         {
             return ship.hasSunk();
         }
@@ -127,8 +160,6 @@ namespace BattleShipApplication
             Console.WriteLine("Please enter the ship location {0}. Format: A3 A5", name);
 
             shipLocation = Convert.ToString(Console.ReadLine());
-            
-            //Console.WriteLine("{0} entered these coordinates: {1}", name, shipLocation);
 
             coordinates = parseLocation(shipLocation);
 
@@ -149,7 +180,7 @@ namespace BattleShipApplication
         {
             bool goodCoords = true;
             //'p' is a placeholder to move to base 1
-            char[] coordArray = { 'p', 'A', 'B', 'C', 'D' };
+            char[] coordArray = { 'p', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
             string c1 = coords[0];//A3
             string c2 = coords[1];//B7
@@ -161,30 +192,30 @@ namespace BattleShipApplication
             } 
 
             //Get the Alpha character from each coord
-            char av1 = c1[0];
-            char av2 = c2[0];
+            char col1 = c1[0];
+            char col2 = c2[0];
 
             //Get the Numeric character from each coord
-            char cnum1 = c1[1];
-            char cnum2 = c2[1];
+            char rnum1 = c1[1];
+            char rnum2 = c2[1];
             //We need these to be int's.
-            int num1 = (int)Char.GetNumericValue(cnum1);
-            int num2 = (int)Char.GetNumericValue(cnum2);
+            int y1 = (int)Char.GetNumericValue(rnum1);
+            int y2 = (int)Char.GetNumericValue(rnum2);
             
-            int pos1 = Array.IndexOf(coordArray, av1);
-            int pos2 = Array.IndexOf(coordArray, av2);
+            int x1 = Array.IndexOf(coordArray, col1);
+            int x2 = Array.IndexOf(coordArray, col2);
 
-            if((pos1 == pos2 && num1 == num2) || (pos1 != pos2 && num1 != num2) )
+            if((x1 == x2 && y1 == y2) || (x1 != x2 && y1 != y2) )
             {
                 Console.WriteLine( "First Fail: coord NOT ok" );
                 goodCoords = false;
             }
 
-            if(pos1 == pos2){
-                if(num1 > num2 && (num1 - num2) == 2)
+            if(x1 == x2){
+                if(y1 > y2 && (y1 - y2) == 2)
                 {
                     Console.WriteLine( "coord ok" );
-                } else if(num1 < num2 && (num2 - num1) == 2)
+                } else if(y1 < y2 && (y2 - y1) == 2)
                 {
                     Console.WriteLine( "coord ok" );
                 } else {
@@ -193,10 +224,10 @@ namespace BattleShipApplication
                 }
             } else
             {
-                if(pos1 > pos2 && (pos1 - pos2) == 2)
+                if(x1 > x2 && (x1 - x2) == 2)
                 {
                     Console.WriteLine( "coord ok" );
-                } else if(pos1 < pos2 && (pos2 - pos1) == 2)
+                } else if(x1 < x2 && (x2 - x1) == 2)
                 {
                     Console.WriteLine( "coord ok" );
                 } else {
@@ -207,8 +238,8 @@ namespace BattleShipApplication
             
             if(goodCoords) 
             {
-                startRange = new Coordinates(pos1, num1);
-                endRange = new Coordinates(pos2, num2);
+                startRange = new Coordinates(x1, y1);
+                endRange = new Coordinates(x2, y2);
             }
             
             return goodCoords;
@@ -229,7 +260,7 @@ namespace BattleShipApplication
             if (m.Success)
             {
                 String coord1 = m.Groups[1].ToString();
-                String ws = m.Groups[2].ToString();
+                //String ws = m.Groups[2].ToString(); //NOT USED
                 String coord2 = m.Groups[3].ToString();
                 
                 coordinates[0] = coord1;
@@ -276,6 +307,57 @@ namespace BattleShipApplication
             
             Console.WriteLine(Environment.NewLine);
         }
+        
+        public void processShot(string shot)  
+        {
+            Unit hitUnit;
+            char c1;
+            char c2;
+            int xValue;
+            int yValue;
+            var currentUnitList = new List<Unit>();
+            //'p' is a placeholder to move to base 1
+            char[] coordArray = { 'p', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+            bool outOfBounds = true;
+            
+            do
+            {
+                //Check if in bounds
+                c1 = shot[0];
+                c2 = shot[1];
+    
+                xValue = Array.IndexOf(coordArray, c1);
+                //convert to int
+                yValue = (int)Char.GetNumericValue(c2);
+            
+                if( ( (xValue > 8) || (yValue > 8) ) || ( ( xValue < 1) || (yValue < 1) ) )
+                {
+                    Console.WriteLine( "Shot outside of bounds.  Please re-enter:" );
+                    shot = Console.ReadLine();
+                } else
+                {
+                    outOfBounds = false;
+                }
+            } 
+            while(outOfBounds);
+            
+            //find Unit that was fired at
+            currentUnitList =  gameBoard.gameBoard.Where(x => x.coordinates.getColumn() == xValue && x.coordinates.getRow() == yValue).ToList();
+            hitUnit = currentUnitList[0];
+            hitUnit.setShot();
+
+            if(hitUnit.getIsOccupied())
+            {
+                //Call out a hit
+                Console.WriteLine(name + " says: \"Hit!\"");
+                
+                ship.isHit();
+            } else
+            {
+                //Call out a miss
+                Console.WriteLine(name + " says: \"Miss!\""); 
+            }
+        }
     }//end class Player
     
     class Ship  
@@ -300,9 +382,9 @@ namespace BattleShipApplication
         bool isOccupied = false;
         string status = "X";
         
-        public Unit(int row, int column)
+        public Unit(int column, int row)
         {
-            coordinates = new Coordinates(row, column);
+            coordinates = new Coordinates(column, row);
         }
         
         public void setIsOccupied()
@@ -318,7 +400,13 @@ namespace BattleShipApplication
         
         public void setShot()
         {
-            status = "M";
+            if(isOccupied)
+            {
+                status = "H"; 
+            }else
+            {
+                status = "M";
+            }
         }
         
         public string getStatus()
@@ -333,9 +421,9 @@ namespace BattleShipApplication
         int column{ get; set; }
         
         public Coordinates(int x, int y)
-        {
-            row = x;
-            column = y;
+        {            
+            column = x;
+            row = y;
         }
         
         public int getRow()
