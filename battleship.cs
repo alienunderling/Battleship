@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace BattleShipApplication
 {
@@ -45,34 +46,15 @@ namespace BattleShipApplication
             
             player1.setShipLocation();
             player2.setShipLocation();
+            
+            player1.outputBoards();
+            player2.outputBoards();
         }
     }//end class BattleShipGame
     
-    class Coordinates  
-    {
-        int row{ get; set; }
-        int column{ get; set; }
-        
-        public Coordinates(int x, int y)
-        {
-            row = x;
-            column = y;
-        }
-        
-        public int getRow()
-        {
-            return row;
-        }
-        
-        public int getColumn()
-        {
-            return column;
-        }
-    }//end class Coordinates
-    
     class BattleShipBoard  
     {
-        List<Unit> gameBoard{get;set;}
+        public List<Unit> gameBoard{get;set;}
         
         public BattleShipBoard()
         {
@@ -90,8 +72,25 @@ namespace BattleShipApplication
         public void placeShip( Coordinates start, Coordinates end )
         { 
             //Set the Units corresponding to the coord range to occupied.
-            Console.WriteLine( "Line 96 start Coordinates {0}, {1}", start.getRow(), start.getColumn() );
-            Console.WriteLine( "Line 97" );
+            Console.WriteLine( "Line 94 start Coordinates {0}, {1}", start.getRow(), start.getColumn() );
+            
+            //Find the corresponding units and set them to isOccupied
+                              
+            var occupiedUnits = new List<Unit>();
+                              
+            occupiedUnits = gameBoard.Where(x => x.coordinates.getRow() >= start.getRow() 
+                                            && x.coordinates.getColumn() >= start.getColumn() 
+                                            && x.coordinates.getRow() <= end.getRow() 
+                                            && x.coordinates.getColumn() <= end.getColumn()).ToList();
+                                            
+            Console.WriteLine( "Line 106 occupiedUnits:" );
+            int i = 0;
+            foreach (Unit unit in occupiedUnits)
+            {
+                Console.WriteLine("Current Unit is occupied? {0} ", unit.getIsOccupied());
+                unit.setIsOccupied();
+                Console.WriteLine("Unit {0} row value is {1}, c value is {2} and is now occupied? {3} ", ++i, unit.coordinates.getRow(), unit.coordinates.getColumn(), unit.getIsOccupied());
+            } 
         }
     }//end class BattleShipBoard
     
@@ -182,10 +181,10 @@ namespace BattleShipApplication
             }
 
             if(pos1 == pos2){
-                if( num1 > num2 && (num1 - num2) == 3 )
+                if(num1 > num2 && (num1 - num2) == 2)
                 {
                     Console.WriteLine( "coord ok" );
-                } else if(num1 < num2 && (num2 - num1) == 3)
+                } else if(num1 < num2 && (num2 - num1) == 2)
                 {
                     Console.WriteLine( "coord ok" );
                 } else {
@@ -194,10 +193,10 @@ namespace BattleShipApplication
                 }
             } else
             {
-                if( pos1 > pos2 && (pos1 - pos2) == 3 )
+                if(pos1 > pos2 && (pos1 - pos2) == 2)
                 {
                     Console.WriteLine( "coord ok" );
-                } else if(pos1 < pos2 && (pos2 - pos1) == 3)
+                } else if(pos1 < pos2 && (pos2 - pos1) == 2)
                 {
                     Console.WriteLine( "coord ok" );
                 } else {
@@ -242,6 +241,30 @@ namespace BattleShipApplication
             
             return coordinates;
         }
+        
+        public void outputBoards()  
+        {
+            Console.WriteLine("{0} board", name);
+            var currentUnitList = new List<Unit>();
+            Unit tempUnit;
+            
+            //TODO: Refactor - There must be a better way to get the units out of the gameBoard
+            for(int row = 1; row <= 8; row++)
+            {
+                for(int ownColumn = 1; ownColumn <= 8; ownColumn++)
+                {
+                    currentUnitList =  gameBoard.gameBoard.Where(x => x.coordinates.getRow() == row && x.coordinates.getColumn() == ownColumn).ToList();
+                    tempUnit = currentUnitList[0];
+                    Console.Write(" {0} ", tempUnit.getStatus());
+                }
+                
+                Console.Write("                ");
+                
+                Console.WriteLine(Environment.NewLine);
+            }
+            
+            Console.WriteLine(Environment.NewLine);
+        }
     }//end class Player
     
     class Ship  
@@ -262,17 +285,56 @@ namespace BattleShipApplication
     
     class Unit  
     {
-        Coordinates coordinates {get; set;}
+        internal Coordinates coordinates {get; set;}
         bool isOccupied = false;
+        string status = "X";
         
         public Unit(int row, int column)
         {
             coordinates = new Coordinates(row, column);
         }
         
+        public void setIsOccupied()
+        {
+            isOccupied = true;
+            status = "S";
+        } 
+        
         public bool getIsOccupied()
         {
             return isOccupied;
         } 
+        
+        public void setShot()
+        {
+            status = "M";
+        }
+        
+        public string getStatus()
+        {
+            return status;
+        }
     }//end class Unit
+    
+    class Coordinates  
+    {
+        int row{ get; set; }
+        int column{ get; set; }
+        
+        public Coordinates(int x, int y)
+        {
+            row = x;
+            column = y;
+        }
+        
+        public int getRow()
+        {
+            return row;
+        }
+        
+        public int getColumn()
+        {
+            return column;
+        }
+    }//end class Coordinates
 }
