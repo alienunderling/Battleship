@@ -1,5 +1,0 @@
-/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplication/bin/Debug/BattleShipApplication.exe
-/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplication/bin/Debug/BattleShipApplication.pdb
-/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplication/obj/x86/Debug/BattleShipApplication.csproj.CoreCompileInputs.cache
-/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplication/obj/x86/Debug/BattleShipApplication.exe
-/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplication/obj/x86/Debug/BattleShipApplication.pdb
