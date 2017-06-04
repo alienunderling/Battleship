@@ -1,0 +1,10 @@
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/bin/Debug/BattleShipApplicationTest.dll
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/bin/Debug/BattleShipApplicationTest.pdb
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/bin/Debug/BattleShipApplication.exe
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/bin/Debug/nunit.framework.dll
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/bin/Debug/BattleShipApplication.pdb
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/bin/Debug/nunit.framework.xml
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/obj/Debug/BattleShipApplication.Tests.csprojResolveAssemblyReference.cache
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/obj/Debug/BattleShipApplication.Tests.csproj.CoreCompileInputs.cache
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/obj/Debug/BattleShipApplicationTest.dll
+/Volumes/Blackbird/Projects/Battleship/BattleShipApplication/BattleShipApplicationTest/obj/Debug/BattleShipApplicationTest.pdb
