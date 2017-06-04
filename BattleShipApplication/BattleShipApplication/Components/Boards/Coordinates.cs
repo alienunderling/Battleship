@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BattleShipApplication.Components.Boards
 {
-	class Coordinates
+	internal class Coordinates
 	{
 		int row { get; set; }
 		int column { get; set; }

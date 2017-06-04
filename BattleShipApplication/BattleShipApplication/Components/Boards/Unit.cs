@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BattleShipApplication.Components.Boards
 {
-	class Unit
+	public class Unit
 	{
 		internal Coordinates coordinates { get; set; }
 		bool isOccupied = false;

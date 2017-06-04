@@ -5,7 +5,7 @@ using BattleShipApplication.Components.Boards;
 
 namespace BattleShipApplication.Components.Board
 {
-	class BattleShipBoard
+	internal class BattleShipBoard
 	{
 		public List<Unit> GameBoard { get; set; }
 

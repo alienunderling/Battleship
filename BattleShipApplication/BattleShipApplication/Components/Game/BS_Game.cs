@@ -2,10 +2,9 @@
 
 namespace BattleShipApplication.Components.Game
 {
-	class BattleShipGame
+	public class BattleShipGame
 	{
 		//member variables
-		//TODO: Create Player class
 		internal Player player1;
 		internal Player player2;
 

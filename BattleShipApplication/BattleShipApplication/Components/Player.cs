@@ -8,7 +8,7 @@ using BattleShipApplication.Components.Ships;
 
 namespace BattleShipApplication.Components
 {
-	class Player
+	public class Player
 	{
 		//member variables
 		internal string name;
@@ -56,8 +56,11 @@ namespace BattleShipApplication.Components
 			gameBoard.PlaceShip(startRange, endRange);
 		}
 
-		//TEST THIS
-		public bool checkCoord(string[] coords) //eg 'A3, B7'
+		/*
+         * Check the validity of the coordinate set.
+         * eg 'A3, B7'
+         */
+		public bool checkCoord(string[] coords)
 		{
 			bool goodCoords = true;
 			//'p' is a placeholder to move to base 1
@@ -92,7 +95,7 @@ namespace BattleShipApplication.Components
 				goodCoords = false;
 			}
 
-			if (x1 == x2)
+            if( (x1 == x2) && (x1 >= 1) && (x1 <= 8) && (y1 >= 1) && (y1 <= 8) && (x2 >= 1) && (x2 <= 8) && (y2 >= 1) && (y2 <= 8))
 			{
 				if (y1 > y2 && (y1 - y2) == 2)
 				{
@@ -134,7 +137,12 @@ namespace BattleShipApplication.Components
 			return goodCoords;
 		}
 
-		//TEST THIS
+		/* 
+         * The coordinates are all in one string.  
+         * Break them apart so they are separate and can be properly parsed from there.
+         * 
+         * Does check if they are within the bounds of the board.
+         */
 		public string[] parseLocation(string location)
 		{
 			//This reg exp ensures the ship location is on the board.

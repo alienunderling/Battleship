@@ -3,7 +3,7 @@ using System;
 
 namespace BattleShipApplication
 {
-    class BattleShip
+    public class BattleShip
 	{
 		static void Main(string[] args)
 		{
